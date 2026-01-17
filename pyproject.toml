@@ -1,0 +1,60 @@
+[project]
+name = "goblincore"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "channels[daphne]>=4.3.2",
+    "django>=6.0.1",
+    "python-dotenv>=1.2.1",
+    "servestatic>=3.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+    "pytest-django>=4.11.1",
+    "pytest-mock>=3.15.1",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "goblincore.settings"
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--reuse-db",
+    "--strict-markers",
+    "--tb=short",
+    "-v",
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+]
+testpaths = ["app"]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["app", "goblincore"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "goblincore/settings.py",
+    "goblincore/asgi.py",
+    "goblincore/wsgi.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

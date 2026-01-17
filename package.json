@@ -1,0 +1,9 @@
+{
+  "name": "goblincore",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Opinionated starter project for modern fullstack applications with Django",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
