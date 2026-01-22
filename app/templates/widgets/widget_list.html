@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Widgets - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Widgets</h1>
+
+<a href="{% url 'widget-create' %}">Create New Widget</a>
+
+<form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Filter</button>
+    <a href="{% url 'widget-list' %}">Clear Filters</a>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Active</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for widget in object_list %}
+        <tr>
+            <td><a href="{% url 'widget-detail' widget.pk %}">{{ widget.name }}</a></td>
+            <td>${{ widget.price }}</td>
+            <td>{{ widget.is_active|yesno:"Yes,No" }}</td>
+            <td>{{ widget.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+                <a href="{% url 'widget-update' widget.pk %}">Edit</a>
+                <a href="{% url 'widget-delete' widget.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No widgets found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ object.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Delete Widget</h1>
+
+<p>Are you sure you want to delete "{{ object.name }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'widget-detail' object.pk %}">Cancel</a>
+</form>
+{% endblock %}

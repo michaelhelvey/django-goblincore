@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>{{ object.name }}</h1>
+
+<dl>
+    <dt>Description:</dt>
+    <dd>{{ object.description|default:"No description" }}</dd>
+    
+    <dt>Price:</dt>
+    <dd>${{ object.price }}</dd>
+    
+    <dt>Active:</dt>
+    <dd>{{ object.is_active|yesno:"Yes,No" }}</dd>
+    
+    <dt>Created:</dt>
+    <dd>{{ object.created_at }}</dd>
+    
+    <dt>Updated:</dt>
+    <dd>{{ object.updated_at }}</dd>
+</dl>
+
+<a href="{% url 'widget-update' object.pk %}">Edit</a>
+<a href="{% url 'widget-delete' object.pk %}">Delete</a>
+<a href="{% url 'widget-list' %}">Back to List</a>
+{% endblock %}

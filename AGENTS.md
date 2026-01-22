@@ -99,9 +99,8 @@ uv lock --upgrade
 
 ## Code Style Guidelines
 
-### General Principles
-
 - **Async-First:** Prefer async views and functions for I/O operations
 - **Django 6.0+ Standards:** Follow modern Django conventions
 - **Simplicity:** Keep code minimal and readable
 - **Type Hints:** Do not use static type hints
+- **Functional tests:** Always use pytest functional-style tests, not classes
