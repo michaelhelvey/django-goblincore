@@ -15,7 +15,7 @@ class LoginView(FormView):
     success_url = reverse_lazy("home")
 
     def get_success_url(self):
-        if next := self.request.GET["next"]:
+        if next := self.request.GET.get("next"):
             return next
         return super().get_success_url()
 

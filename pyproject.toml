@@ -10,6 +10,8 @@ dependencies = [
     "django>=6.0.1",
     "django-filter>=25.2",
     "django-vite>=3.1.0",
+    "djangorestframework>=3.16.1",
+    "drf-restwind>=1.2.0",
     "python-dotenv>=1.2.1",
     "servestatic>=3.1.0",
 ]

@@ -293,6 +293,31 @@ wheels = [
 ]
 
 [[package]]
+name = "djangorestframework"
+version = "3.16.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8a/95/5376fe618646fde6899b3cdc85fd959716bb67542e273a76a80d9f326f27/djangorestframework-3.16.1.tar.gz", hash = "sha256:166809528b1aced0a17dc66c24492af18049f2c9420dbd0be29422029cfc3ff7", size = 1089735, upload-time = "2025-08-06T17:50:53.251Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/ce/bf8b9d3f415be4ac5588545b5fcdbbb841977db1c1d923f7568eeabe1689/djangorestframework-3.16.1-py3-none-any.whl", hash = "sha256:33a59f47fb9c85ede792cbf88bde71893bcda0667bc573f784649521f1102cec", size = 1080442, upload-time = "2025-08-06T17:50:50.667Z" },
+]
+
+[[package]]
+name = "drf-restwind"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "djangorestframework" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/46/47/7e39eabd9cc133a348fffc304818da3aced677aaf3cc8dd9a68a1b1df96f/drf_restwind-1.2.0.tar.gz", hash = "sha256:a56b403587112faabc66fb355d15c292e046ad769815984b57d8ede5c75b3785", size = 63643, upload-time = "2026-01-20T09:33:42.127Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ba/9f/ff0dbef7cd1dfd063951e416636cb07b2de87c2e4ab91f972a6cbd4ba4f0/drf_restwind-1.2.0-py3-none-any.whl", hash = "sha256:801b6853ff433561fd4cf313eb8adc834bf0e6dfa531ae747f3d952b3f3c7ea1", size = 86766, upload-time = "2026-01-20T09:33:43.201Z" },
+]
+
+[[package]]
 name = "goblincore"
 version = "0.1.0"
 source = { virtual = "." }
@@ -302,6 +327,8 @@ dependencies = [
     { name = "django" },
     { name = "django-filter" },
     { name = "django-vite" },
+    { name = "djangorestframework" },
+    { name = "drf-restwind" },
     { name = "python-dotenv" },
     { name = "servestatic" },
 ]
@@ -323,6 +350,8 @@ requires-dist = [
     { name = "django", specifier = ">=6.0.1" },
     { name = "django-filter", specifier = ">=25.2" },
     { name = "django-vite", specifier = ">=3.1.0" },
+    { name = "djangorestframework", specifier = ">=3.16.1" },
+    { name = "drf-restwind", specifier = ">=1.2.0" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
     { name = "servestatic", specifier = ">=3.1.0" },
 ]

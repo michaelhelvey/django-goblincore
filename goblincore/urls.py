@@ -17,5 +17,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [path("admin/", admin.site.urls), path("", include("app.urls"))]
+from app.api.widgets import WidgetViewSet
+
+# API Router
+router = DefaultRouter()
+router.register(r"widgets", WidgetViewSet, basename="widget")
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
+    path("", include("app.urls")),
+]

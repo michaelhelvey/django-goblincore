@@ -4,7 +4,7 @@ An opinionated starting point for modern Django development.
 
 ## Features
 
-- Function testing with Pytest instead of the default Django base classes
+- Functional testing with Pytest instead of the default Django base classes
 - Django best practices (or at least opinions): A custom user model, emails instead of usernames,
   ServeStatic (Whitenoise) for static files, standard base template with messages framework support,
   etc.
@@ -37,5 +37,9 @@ Then just run `make setup` to install dependencies and initalize your environmen
 ## Common Commands
 
 Start the application by running `./manage.py runserver` and visiting `http://localhost:8000`.
+
 Create yourself a user by running `./manage.py createsuperuser`. It's a standard Django application,
 so you'll mostly just be interacting with the standard `./manage.py` stuff.
+
+You can also view the Django Rest Framework frontend for a given resource, for example, at
+`http://localhost:8000/api/widgets`.
