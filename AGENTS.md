@@ -1,106 +1,33 @@
-# Agent Guidelines for Goblincore
+# Goblincore
 
-This file contains instructions for AI coding agents working in this repository.
+An opinionated starting point for modern Django development.
 
 ## Project Overview
 
-- **Type:** Modern Django 6.0+ fullstack web application
-- **Language:** Python 3.14+
-- **Framework:** Django with async/ASGI support
-- **Package Manager:** `uv` (modern Python package manager)
-- **Database:** SQLite (development), configurable for production
-- **Server:** Uvicorn (dev), Gunicorn + Uvicorn Worker (prod)
+- Language: Python 3.14:
+- Framework: Django 6.0+
+- Package Manager (python): `uv`
+- Package Manager (javascript): `pnpm`
+- JS ecosystem: `vite` (bundler / transpiler), `vitest` (js testing)
 
-## Build, Test, and Development Commands
+## Commands
 
-### Running the Application
+- Start application: `./manage.py runserver` or `make`
+- Test: `pytest` or `make test`
+- Test (specific file): `pytest app/tests/test_user.py`
+- Test (specific test function): `pytest app/tests/test_user.py::test_create_user_with_valid_data`
+- Add a package: `uv add <package>`
+- Format code: `make format` (runs ruff formatter)
+- Lint code: `make lint` (runs ruff linter)
+- Lint and fix: `make lint-fix` (runs ruff linter with auto-fix)
 
-```bash
-# Development server with hot reload (default)
-make
-# or explicitly:
-make default
-# or directly:
-python -m uvicorn goblincore.asgi:application --reload
+You can potentially discover other commands by examining the `Makefile` or by running
+`./manage.py --help`.
 
-# Production server
-make prod
-# or directly:
-python -m gunicorn goblincore.asgi:application -k uvicorn_worker.UvicornWorker
-```
+## Guidelines
 
-### Django Management Commands
-
-```bash
-# Run Django management commands
-python manage.py <command>
-
-# Create database migrations
-python manage.py makemigrations
-
-# Apply migrations
-python manage.py migrate
-
-# Create superuser for admin
-python manage.py createsuperuser
-```
-
-### Testing
-
-This project uses pytest with pytest-django for testing.
-
-```bash
-# Run all tests with coverage
-make test
-
-# Run tests without coverage
-pytest
-
-# Run specific test file
-pytest app/tests/test_example.py
-
-# Run specific test function
-pytest app/tests/test_example.py::test_example
-
-# Run tests matching a pattern
-pytest -k "test_async"
-
-# Run with verbose output
-pytest -vv
-
-# Run and show coverage in terminal
-pytest --cov --cov-report=term-missing
-
-# Keep test database between runs (faster)
-pytest --reuse-db
-
-# Create fresh test database
-pytest --create-db
-
-# Run async tests
-pytest -k "async"
-```
-
-### Package Management
-
-```bash
-# Install dependencies
-uv sync
-
-# Add a new dependency
-uv add <package>
-
-# Add a dev dependency
-uv add --dev <package>
-
-# Update dependencies
-uv lock --upgrade
-```
-
-## Code Style Guidelines
-
-- **Async-First:** Prefer async views and functions for I/O operations
-- **Django 6.0+ Standards:** Follow modern Django conventions
-- **Simplicity:** Keep code minimal and readable
-- **Type Hints:** Do not use static type hints
-- **Functional tests:** Always use pytest functional-style tests, not classes
+- Write functional-style pytest tests. Do not write class based tests.
+- Aim for 100% test coverage, but do not overtest a feature. Aim to achieve coverage with a few
+  simple tests that validate core functionality.
+- Do not use Python type hints. Ignore type hinting errors from the LSP. This project does not use
+  static typing.

@@ -1,3 +1,7 @@
-html, body {
-  background-color: blue;
+@import "tailwindcss";
+@plugin "daisyui";
+
+html,
+body {
+  height: 100%;
 }

@@ -20,6 +20,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "pytest-django>=4.11.1",
     "pytest-mock>=3.15.1",
+    "ruff>=0.14.13",
 ]
 
 [tool.pytest.ini_options]
@@ -50,6 +51,7 @@ omit = [
     "goblincore/settings.py",
     "goblincore/asgi.py",
     "goblincore/wsgi.py",
+    "app/management/commands/runserver.py"
 ]
 
 [tool.coverage.report]
@@ -60,3 +62,29 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "DJ", # flake8-django
+]
+ignore = [
+    "E501", # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/migrations/*.py" = ["E501", "F401"]
+"*/tests/*.py" = ["B017"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

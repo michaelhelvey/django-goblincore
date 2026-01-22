@@ -1,12 +1,13 @@
 from django.urls import path
-from app.views.home import HomeView
+
 from app.views.auth import LoginView, logout_view
+from app.views.home import HomeView
 from app.views.widget import (
-    WidgetListView,
-    WidgetDetailView,
     WidgetCreateView,
-    WidgetUpdateView,
     WidgetDeleteView,
+    WidgetDetailView,
+    WidgetListView,
+    WidgetUpdateView,
 )
 
 urlpatterns = [

@@ -1,8 +1,9 @@
+from decimal import Decimal
+
 import pytest
 from django.urls import reverse
-from decimal import Decimal
-from app.models import Widget
 
+from app.models import Widget
 
 # Model Tests
 
@@ -152,9 +153,7 @@ def test_widget_detail_view_get(authenticated_client):
         description="A detailed description",
         price=Decimal("25.00"),
     )
-    response = authenticated_client.get(
-        reverse("widget-detail", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     content = response.content.decode()
     assert "Detail Test Widget" in content
@@ -215,9 +214,7 @@ def test_widget_create_view_post_invalid(authenticated_client):
 def test_widget_update_view_get(authenticated_client):
     """Test that update view displays form with instance data."""
     widget = Widget.objects.create(name="Original Widget", price=Decimal("10.00"))
-    response = authenticated_client.get(
-        reverse("widget-update", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.get(reverse("widget-update", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     assert "widgets/widget_form.html" in [t.name for t in response.templates]
     assert "Edit Widget" in response.content.decode()
@@ -234,9 +231,7 @@ def test_widget_update_view_post_valid(authenticated_client):
         "price": "20.00",
         "is_active": False,
     }
-    response = authenticated_client.post(
-        reverse("widget-update", kwargs={"pk": widget.pk}), data
-    )
+    response = authenticated_client.post(reverse("widget-update", kwargs={"pk": widget.pk}), data)
     assert response.status_code == 302  # Redirect after successful update
     assert response.url == reverse("widget-list")
 
@@ -255,9 +250,7 @@ def test_widget_update_view_post_invalid(authenticated_client):
         "name": "",  # Name is required
         "price": "invalid",
     }
-    response = authenticated_client.post(
-        reverse("widget-update", kwargs={"pk": widget.pk}), data
-    )
+    response = authenticated_client.post(reverse("widget-update", kwargs={"pk": widget.pk}), data)
     assert response.status_code == 200  # Stays on form page
 
     widget.refresh_from_db()
@@ -271,9 +264,7 @@ def test_widget_update_view_post_invalid(authenticated_client):
 def test_widget_delete_view_get(authenticated_client):
     """Test that delete view displays confirmation."""
     widget = Widget.objects.create(name="To Delete")
-    response = authenticated_client.get(
-        reverse("widget-delete", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.get(reverse("widget-delete", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     assert "widgets/widget_confirm_delete.html" in [t.name for t in response.templates]
     assert "To Delete" in response.content.decode()
@@ -285,9 +276,7 @@ def test_widget_delete_view_post(authenticated_client):
     widget = Widget.objects.create(name="Delete Me")
     widget_pk = widget.pk
 
-    response = authenticated_client.post(
-        reverse("widget-delete", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.post(reverse("widget-delete", kwargs={"pk": widget.pk}))
     assert response.status_code == 302  # Redirect after successful delete
     assert response.url == reverse("widget-list")
     assert not Widget.objects.filter(pk=widget_pk).exists()
@@ -319,9 +308,7 @@ def test_full_crud_workflow(authenticated_client):
     widget = Widget.objects.get(name="Workflow Widget")
 
     # Read (Detail)
-    response = authenticated_client.get(
-        reverse("widget-detail", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     assert "Workflow Widget" in response.content.decode()
 
@@ -342,9 +329,7 @@ def test_full_crud_workflow(authenticated_client):
     assert widget.price == Decimal("40.00")
 
     # Delete
-    response = authenticated_client.post(
-        reverse("widget-delete", kwargs={"pk": widget.pk})
-    )
+    response = authenticated_client.post(reverse("widget-delete", kwargs={"pk": widget.pk}))
     assert response.status_code == 302
     assert not Widget.objects.filter(pk=widget.pk).exists()
 
@@ -352,13 +337,9 @@ def test_full_crud_workflow(authenticated_client):
 @pytest.mark.django_db
 def test_filter_combinations(authenticated_client):
     """Test multiple filters together."""
-    Widget.objects.create(
-        name="Active Expensive", price=Decimal("100.00"), is_active=True
-    )
+    Widget.objects.create(name="Active Expensive", price=Decimal("100.00"), is_active=True)
     Widget.objects.create(name="Active Cheap", price=Decimal("5.00"), is_active=True)
-    Widget.objects.create(
-        name="Inactive Expensive", price=Decimal("100.00"), is_active=False
-    )
+    Widget.objects.create(name="Inactive Expensive", price=Decimal("100.00"), is_active=False)
 
     # Filter by active status and price range
     response = authenticated_client.get(

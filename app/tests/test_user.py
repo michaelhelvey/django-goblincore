@@ -159,7 +159,5 @@ def test_authentication_with_email(db):
 
 def test_inactive_user_cannot_authenticate(db):
     """Test that inactive users cannot authenticate."""
-    User.objects.create_user(
-        email="inactive@example.com", password="testpass123", is_active=False
-    )
+    User.objects.create_user(email="inactive@example.com", password="testpass123", is_active=False)
     assert authenticate(email="inactive@example.com", password="testpass123") is None

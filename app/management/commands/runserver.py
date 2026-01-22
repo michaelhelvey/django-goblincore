@@ -4,9 +4,8 @@ import signal
 import subprocess
 import sys
 
-from django.conf import settings
-from django.utils import autoreload
 from daphne.management.commands.runserver import Command as DaphneRunserverCommand
+from django.conf import settings
 
 
 class Command(DaphneRunserverCommand):

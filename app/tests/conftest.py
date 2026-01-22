@@ -1,5 +1,6 @@
 import pytest
 from django.test import Client
+
 from app.models import User
 
 
@@ -19,5 +20,5 @@ def authenticated_client(db):
         last_name="User",
     )
     client = Client()
-    client.login(username="testuser@example.com", password="testpass123")
+    client.force_login(user)
     return client
