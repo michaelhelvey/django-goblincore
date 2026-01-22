@@ -20,8 +20,8 @@ def test_login_view_get(client):
     response = client.get(reverse("login"))
     assert response.status_code == 200
     assert b"Login" in response.content
-    assert b"Email:" in response.content
-    assert b"Password:" in response.content
+    assert b"Email" in response.content
+    assert b"Password" in response.content
 
 
 def test_login_with_valid_credentials(client, test_user):

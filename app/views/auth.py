@@ -14,6 +14,11 @@ class LoginView(FormView):
     form_class = AuthenticationForm
     success_url = reverse_lazy("home")
 
+    def get_success_url(self):
+        if next := self.request.GET["next"]:
+            return next
+        return super().get_success_url()
+
     def dispatch(self, request, *args, **kwargs):
         # Redirect to home if already authenticated
         if request.user.is_authenticated:

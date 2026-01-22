@@ -9,6 +9,7 @@ An opinionated starting point for modern Django development.
 - Package Manager (python): `uv`
 - Package Manager (javascript): `pnpm`
 - JS ecosystem: `vite` (bundler / transpiler), `vitest` (js testing)
+- CSS styling: tailwindcss with daisyui (docs: https://daisyui.com/llms.txt)
 
 ## Commands
 

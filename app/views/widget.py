@@ -1,4 +1,5 @@
 import django_filters
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -13,18 +14,38 @@ from app.models import Widget
 
 
 class WidgetFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr="icontains", label="Name contains")
+    name = django_filters.CharFilter(
+        field_name="name",
+        lookup_expr="icontains",
+        label="Name",
+        widget=forms.TextInput(attrs={"class": "input input-bordered w-full"}),
+    )
     min_price = django_filters.NumberFilter(
-        field_name="price", lookup_expr="gte", label="Min price"
+        field_name="price",
+        lookup_expr="gte",
+        label="Min Price",
+        widget=forms.NumberInput(attrs={"class": "input input-bordered w-full"}),
     )
     max_price = django_filters.NumberFilter(
-        field_name="price", lookup_expr="lte", label="Max price"
+        field_name="price",
+        lookup_expr="lte",
+        label="Max Price",
+        widget=forms.NumberInput(attrs={"class": "input input-bordered w-full"}),
     )
-    is_active = django_filters.BooleanFilter(label="Active only")
+    is_active = django_filters.ChoiceFilter(
+        field_name="is_active",
+        label="Status",
+        empty_label="All",
+        choices=[
+            (True, "Active"),
+            (False, "Inactive"),
+        ],
+        widget=forms.Select(attrs={"class": "select select-bordered w-full"}),
+    )
 
     class Meta:
         model = Widget
-        fields = ["name", "is_active"]
+        fields = []
 
 
 class WidgetListView(LoginRequiredMixin, FilterView):

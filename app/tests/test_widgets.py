@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+from bs4 import BeautifulSoup
 from django.urls import reverse
 
 from app.models import Widget
@@ -88,8 +89,10 @@ def test_widget_list_view_displays_widgets(authenticated_client):
 
     response = authenticated_client.get(reverse("widget-list"))
     assert response.status_code == 200
-    assert "Widget 1" in response.content.decode()
-    assert "Widget 2" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Widget 1" in content
+    assert "Widget 2" in content
 
 
 @pytest.mark.django_db
@@ -97,7 +100,9 @@ def test_widget_list_view_empty(authenticated_client):
     """Test that list view handles no widgets gracefully."""
     response = authenticated_client.get(reverse("widget-list"))
     assert response.status_code == 200
-    assert "No widgets found" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "No widgets found" in content
 
 
 @pytest.mark.django_db
@@ -108,8 +113,10 @@ def test_widget_list_view_filter_by_name(authenticated_client):
 
     response = authenticated_client.get(reverse("widget-list"), {"name": "Alpha"})
     assert response.status_code == 200
-    assert "Alpha Widget" in response.content.decode()
-    assert "Beta Widget" not in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Alpha Widget" in content
+    assert "Beta Widget" not in content
 
 
 @pytest.mark.django_db
@@ -123,7 +130,8 @@ def test_widget_list_view_filter_by_price_range(authenticated_client):
         reverse("widget-list"), {"min_price": "10", "max_price": "30"}
     )
     assert response.status_code == 200
-    content = response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
     assert "Cheap Widget" not in content
     assert "Medium Widget" in content
     assert "Expensive Widget" not in content
@@ -135,11 +143,29 @@ def test_widget_list_view_filter_by_is_active(authenticated_client):
     Widget.objects.create(name="Active Widget", is_active=True)
     Widget.objects.create(name="Inactive Widget", is_active=False)
 
-    response = authenticated_client.get(reverse("widget-list"), {"is_active": "true"})
+    # Test filtering for active widgets
+    response = authenticated_client.get(reverse("widget-list"), {"is_active": "True"})
     assert response.status_code == 200
-    content = response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
     assert "Active Widget" in content
     assert "Inactive Widget" not in content
+
+    # Test filtering for inactive widgets
+    response = authenticated_client.get(reverse("widget-list"), {"is_active": "False"})
+    assert response.status_code == 200
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Active Widget" not in content
+    assert "Inactive Widget" in content
+
+    # Test showing all widgets (no filter)
+    response = authenticated_client.get(reverse("widget-list"), {})
+    assert response.status_code == 200
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Active Widget" in content
+    assert "Inactive Widget" in content
 
 
 # View Tests - Detail
@@ -155,7 +181,8 @@ def test_widget_detail_view_get(authenticated_client):
     )
     response = authenticated_client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
-    content = response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
     assert "Detail Test Widget" in content
     assert "A detailed description" in content
     assert "25.00" in content
@@ -177,7 +204,9 @@ def test_widget_create_view_get(authenticated_client):
     response = authenticated_client.get(reverse("widget-create"))
     assert response.status_code == 200
     assert "widgets/widget_form.html" in [t.name for t in response.templates]
-    assert "Create New Widget" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Create New Widget" in content
 
 
 @pytest.mark.django_db
@@ -217,8 +246,13 @@ def test_widget_update_view_get(authenticated_client):
     response = authenticated_client.get(reverse("widget-update", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     assert "widgets/widget_form.html" in [t.name for t in response.templates]
-    assert "Edit Widget" in response.content.decode()
-    assert "Original Widget" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Edit Widget" in content
+    # Check that the form has the widget name in the input field value
+    name_input = soup.find("input", {"name": "name"})
+    assert name_input is not None
+    assert name_input.get("value") == "Original Widget"
 
 
 @pytest.mark.django_db
@@ -267,7 +301,9 @@ def test_widget_delete_view_get(authenticated_client):
     response = authenticated_client.get(reverse("widget-delete", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
     assert "widgets/widget_confirm_delete.html" in [t.name for t in response.templates]
-    assert "To Delete" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "To Delete" in content
 
 
 @pytest.mark.django_db
@@ -310,7 +346,9 @@ def test_full_crud_workflow(authenticated_client):
     # Read (Detail)
     response = authenticated_client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
     assert response.status_code == 200
-    assert "Workflow Widget" in response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
+    assert "Workflow Widget" in content
 
     # Update
     update_data = {
@@ -344,10 +382,11 @@ def test_filter_combinations(authenticated_client):
     # Filter by active status and price range
     response = authenticated_client.get(
         reverse("widget-list"),
-        {"is_active": "true", "min_price": "50", "max_price": "150"},
+        {"is_active": "True", "min_price": "50", "max_price": "150"},
     )
     assert response.status_code == 200
-    content = response.content.decode()
+    soup = BeautifulSoup(response.content, "html.parser")
+    content = soup.get_text()
     assert "Active Expensive" in content
     assert "Active Cheap" not in content
     assert "Inactive Expensive" not in content
