@@ -11,8 +11,15 @@ wheels/
 
 # Django
 staticfiles
+static/build
 db.sqlite3
 
 # Other
 .env
 .coverage
+
+# javascript
+node_modules
+build
+dist
+coverage
