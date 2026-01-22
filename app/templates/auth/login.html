@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Goblincore{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+
+{% if form.non_field_errors %}
+<div class="errors">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div>
+        <label for="{{ form.username.id_for_label }}">Email:</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+        <div class="errors">{{ form.username.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="{{ form.password.id_for_label }}">Password:</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+        <div class="errors">{{ form.password.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <button type="submit">Login</button>
+</form>
+{% endblock %}

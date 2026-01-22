@@ -1,5 +1,6 @@
 from django.urls import path
 from app.views.home import HomeView
+from app.views.auth import LoginView, logout_view
 from app.views.widget import (
     WidgetListView,
     WidgetDetailView,
@@ -10,6 +11,8 @@ from app.views.widget import (
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("logout/", logout_view, name="logout"),
     path("widgets/", WidgetListView.as_view(), name="widget-list"),
     path("widgets/create/", WidgetCreateView.as_view(), name="widget-create"),
     path("widgets/<int:pk>/", WidgetDetailView.as_view(), name="widget-detail"),

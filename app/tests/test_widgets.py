@@ -72,53 +72,53 @@ def test_widget_default_values():
 
 
 @pytest.mark.django_db
-def test_widget_list_view_get(client):
+def test_widget_list_view_get(authenticated_client):
     """Test that list view returns 200 and uses correct template."""
-    response = client.get(reverse("widget-list"))
+    response = authenticated_client.get(reverse("widget-list"))
     assert response.status_code == 200
     assert "widgets/widget_list.html" in [t.name for t in response.templates]
 
 
 @pytest.mark.django_db
-def test_widget_list_view_displays_widgets(client):
+def test_widget_list_view_displays_widgets(authenticated_client):
     """Test that list view displays created widgets."""
     Widget.objects.create(name="Widget 1", price=Decimal("10.00"))
     Widget.objects.create(name="Widget 2", price=Decimal("20.00"))
 
-    response = client.get(reverse("widget-list"))
+    response = authenticated_client.get(reverse("widget-list"))
     assert response.status_code == 200
     assert "Widget 1" in response.content.decode()
     assert "Widget 2" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_widget_list_view_empty(client):
+def test_widget_list_view_empty(authenticated_client):
     """Test that list view handles no widgets gracefully."""
-    response = client.get(reverse("widget-list"))
+    response = authenticated_client.get(reverse("widget-list"))
     assert response.status_code == 200
     assert "No widgets found" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_widget_list_view_filter_by_name(client):
+def test_widget_list_view_filter_by_name(authenticated_client):
     """Test filtering widgets by name."""
     Widget.objects.create(name="Alpha Widget", price=Decimal("10.00"))
     Widget.objects.create(name="Beta Widget", price=Decimal("20.00"))
 
-    response = client.get(reverse("widget-list"), {"name": "Alpha"})
+    response = authenticated_client.get(reverse("widget-list"), {"name": "Alpha"})
     assert response.status_code == 200
     assert "Alpha Widget" in response.content.decode()
     assert "Beta Widget" not in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_widget_list_view_filter_by_price_range(client):
+def test_widget_list_view_filter_by_price_range(authenticated_client):
     """Test filtering widgets by price range (min and max)."""
     Widget.objects.create(name="Cheap Widget", price=Decimal("5.00"))
     Widget.objects.create(name="Medium Widget", price=Decimal("15.00"))
     Widget.objects.create(name="Expensive Widget", price=Decimal("50.00"))
 
-    response = client.get(
+    response = authenticated_client.get(
         reverse("widget-list"), {"min_price": "10", "max_price": "30"}
     )
     assert response.status_code == 200
@@ -129,12 +129,12 @@ def test_widget_list_view_filter_by_price_range(client):
 
 
 @pytest.mark.django_db
-def test_widget_list_view_filter_by_is_active(client):
+def test_widget_list_view_filter_by_is_active(authenticated_client):
     """Test filtering widgets by is_active status."""
     Widget.objects.create(name="Active Widget", is_active=True)
     Widget.objects.create(name="Inactive Widget", is_active=False)
 
-    response = client.get(reverse("widget-list"), {"is_active": "true"})
+    response = authenticated_client.get(reverse("widget-list"), {"is_active": "true"})
     assert response.status_code == 200
     content = response.content.decode()
     assert "Active Widget" in content
@@ -145,14 +145,16 @@ def test_widget_list_view_filter_by_is_active(client):
 
 
 @pytest.mark.django_db
-def test_widget_detail_view_get(client):
+def test_widget_detail_view_get(authenticated_client):
     """Test that detail view returns 200 and displays widget."""
     widget = Widget.objects.create(
         name="Detail Test Widget",
         description="A detailed description",
         price=Decimal("25.00"),
     )
-    response = client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
+    response = authenticated_client.get(
+        reverse("widget-detail", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 200
     content = response.content.decode()
     assert "Detail Test Widget" in content
@@ -161,9 +163,9 @@ def test_widget_detail_view_get(client):
 
 
 @pytest.mark.django_db
-def test_widget_detail_view_404(client):
+def test_widget_detail_view_404(authenticated_client):
     """Test that detail view returns 404 for nonexistent widget."""
-    response = client.get(reverse("widget-detail", kwargs={"pk": 9999}))
+    response = authenticated_client.get(reverse("widget-detail", kwargs={"pk": 9999}))
     assert response.status_code == 404
 
 
@@ -171,16 +173,16 @@ def test_widget_detail_view_404(client):
 
 
 @pytest.mark.django_db
-def test_widget_create_view_get(client):
+def test_widget_create_view_get(authenticated_client):
     """Test that create view displays form."""
-    response = client.get(reverse("widget-create"))
+    response = authenticated_client.get(reverse("widget-create"))
     assert response.status_code == 200
     assert "widgets/widget_form.html" in [t.name for t in response.templates]
     assert "Create New Widget" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_widget_create_view_post_valid(client):
+def test_widget_create_view_post_valid(authenticated_client):
     """Test creating a widget with valid data."""
     data = {
         "name": "New Widget",
@@ -188,20 +190,20 @@ def test_widget_create_view_post_valid(client):
         "price": "15.99",
         "is_active": True,
     }
-    response = client.post(reverse("widget-create"), data)
+    response = authenticated_client.post(reverse("widget-create"), data)
     assert response.status_code == 302  # Redirect after successful create
     assert response.url == reverse("widget-list")
     assert Widget.objects.filter(name="New Widget").exists()
 
 
 @pytest.mark.django_db
-def test_widget_create_view_post_invalid(client):
+def test_widget_create_view_post_invalid(authenticated_client):
     """Test that invalid data shows errors and doesn't create widget."""
     data = {
         "name": "",  # Name is required
         "price": "not-a-number",  # Invalid price
     }
-    response = client.post(reverse("widget-create"), data)
+    response = authenticated_client.post(reverse("widget-create"), data)
     assert response.status_code == 200  # Stays on form page
     assert not Widget.objects.filter(name="").exists()
 
@@ -210,10 +212,12 @@ def test_widget_create_view_post_invalid(client):
 
 
 @pytest.mark.django_db
-def test_widget_update_view_get(client):
+def test_widget_update_view_get(authenticated_client):
     """Test that update view displays form with instance data."""
     widget = Widget.objects.create(name="Original Widget", price=Decimal("10.00"))
-    response = client.get(reverse("widget-update", kwargs={"pk": widget.pk}))
+    response = authenticated_client.get(
+        reverse("widget-update", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 200
     assert "widgets/widget_form.html" in [t.name for t in response.templates]
     assert "Edit Widget" in response.content.decode()
@@ -221,7 +225,7 @@ def test_widget_update_view_get(client):
 
 
 @pytest.mark.django_db
-def test_widget_update_view_post_valid(client):
+def test_widget_update_view_post_valid(authenticated_client):
     """Test updating a widget with valid data."""
     widget = Widget.objects.create(name="Old Name", price=Decimal("10.00"))
     data = {
@@ -230,7 +234,9 @@ def test_widget_update_view_post_valid(client):
         "price": "20.00",
         "is_active": False,
     }
-    response = client.post(reverse("widget-update", kwargs={"pk": widget.pk}), data)
+    response = authenticated_client.post(
+        reverse("widget-update", kwargs={"pk": widget.pk}), data
+    )
     assert response.status_code == 302  # Redirect after successful update
     assert response.url == reverse("widget-list")
 
@@ -242,14 +248,16 @@ def test_widget_update_view_post_valid(client):
 
 
 @pytest.mark.django_db
-def test_widget_update_view_post_invalid(client):
+def test_widget_update_view_post_invalid(authenticated_client):
     """Test that invalid data shows errors and doesn't update widget."""
     widget = Widget.objects.create(name="Original Name")
     data = {
         "name": "",  # Name is required
         "price": "invalid",
     }
-    response = client.post(reverse("widget-update", kwargs={"pk": widget.pk}), data)
+    response = authenticated_client.post(
+        reverse("widget-update", kwargs={"pk": widget.pk}), data
+    )
     assert response.status_code == 200  # Stays on form page
 
     widget.refresh_from_db()
@@ -260,31 +268,35 @@ def test_widget_update_view_post_invalid(client):
 
 
 @pytest.mark.django_db
-def test_widget_delete_view_get(client):
+def test_widget_delete_view_get(authenticated_client):
     """Test that delete view displays confirmation."""
     widget = Widget.objects.create(name="To Delete")
-    response = client.get(reverse("widget-delete", kwargs={"pk": widget.pk}))
+    response = authenticated_client.get(
+        reverse("widget-delete", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 200
     assert "widgets/widget_confirm_delete.html" in [t.name for t in response.templates]
     assert "To Delete" in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_widget_delete_view_post(client):
+def test_widget_delete_view_post(authenticated_client):
     """Test deleting a widget."""
     widget = Widget.objects.create(name="Delete Me")
     widget_pk = widget.pk
 
-    response = client.post(reverse("widget-delete", kwargs={"pk": widget.pk}))
+    response = authenticated_client.post(
+        reverse("widget-delete", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 302  # Redirect after successful delete
     assert response.url == reverse("widget-list")
     assert not Widget.objects.filter(pk=widget_pk).exists()
 
 
 @pytest.mark.django_db
-def test_widget_delete_view_404(client):
+def test_widget_delete_view_404(authenticated_client):
     """Test that delete view returns 404 for nonexistent widget."""
-    response = client.get(reverse("widget-delete", kwargs={"pk": 9999}))
+    response = authenticated_client.get(reverse("widget-delete", kwargs={"pk": 9999}))
     assert response.status_code == 404
 
 
@@ -292,7 +304,7 @@ def test_widget_delete_view_404(client):
 
 
 @pytest.mark.django_db
-def test_full_crud_workflow(client):
+def test_full_crud_workflow(authenticated_client):
     """Test complete CRUD workflow: create, read, update, delete."""
     # Create
     create_data = {
@@ -301,13 +313,15 @@ def test_full_crud_workflow(client):
         "price": "30.00",
         "is_active": True,
     }
-    response = client.post(reverse("widget-create"), create_data)
+    response = authenticated_client.post(reverse("widget-create"), create_data)
     assert response.status_code == 302
 
     widget = Widget.objects.get(name="Workflow Widget")
 
     # Read (Detail)
-    response = client.get(reverse("widget-detail", kwargs={"pk": widget.pk}))
+    response = authenticated_client.get(
+        reverse("widget-detail", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 200
     assert "Workflow Widget" in response.content.decode()
 
@@ -318,7 +332,7 @@ def test_full_crud_workflow(client):
         "price": "40.00",
         "is_active": False,
     }
-    response = client.post(
+    response = authenticated_client.post(
         reverse("widget-update", kwargs={"pk": widget.pk}), update_data
     )
     assert response.status_code == 302
@@ -328,13 +342,15 @@ def test_full_crud_workflow(client):
     assert widget.price == Decimal("40.00")
 
     # Delete
-    response = client.post(reverse("widget-delete", kwargs={"pk": widget.pk}))
+    response = authenticated_client.post(
+        reverse("widget-delete", kwargs={"pk": widget.pk})
+    )
     assert response.status_code == 302
     assert not Widget.objects.filter(pk=widget.pk).exists()
 
 
 @pytest.mark.django_db
-def test_filter_combinations(client):
+def test_filter_combinations(authenticated_client):
     """Test multiple filters together."""
     Widget.objects.create(
         name="Active Expensive", price=Decimal("100.00"), is_active=True
@@ -345,7 +361,7 @@ def test_filter_combinations(client):
     )
 
     # Filter by active status and price range
-    response = client.get(
+    response = authenticated_client.get(
         reverse("widget-list"),
         {"is_active": "true", "min_price": "50", "max_price": "150"},
     )

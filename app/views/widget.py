@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView,
@@ -25,33 +26,33 @@ class WidgetFilter(django_filters.FilterSet):
         fields = ["name", "is_active"]
 
 
-class WidgetListView(FilterView):
+class WidgetListView(LoginRequiredMixin, FilterView):
     model = Widget
     template_name = "widgets/widget_list.html"
     filterset_class = WidgetFilter
     context_object_name = "object_list"
 
 
-class WidgetDetailView(DetailView):
+class WidgetDetailView(LoginRequiredMixin, DetailView):
     model = Widget
     template_name = "widgets/widget_detail.html"
 
 
-class WidgetCreateView(CreateView):
+class WidgetCreateView(LoginRequiredMixin, CreateView):
     model = Widget
     template_name = "widgets/widget_form.html"
     fields = ["name", "description", "price", "is_active"]
     success_url = reverse_lazy("widget-list")
 
 
-class WidgetUpdateView(UpdateView):
+class WidgetUpdateView(LoginRequiredMixin, UpdateView):
     model = Widget
     template_name = "widgets/widget_form.html"
     fields = ["name", "description", "price", "is_active"]
     success_url = reverse_lazy("widget-list")
 
 
-class WidgetDeleteView(DeleteView):
+class WidgetDeleteView(LoginRequiredMixin, DeleteView):
     model = Widget
     template_name = "widgets/widget_confirm_delete.html"
     success_url = reverse_lazy("widget-list")
