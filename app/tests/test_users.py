@@ -1,8 +1,20 @@
 import pytest
+from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model
 from django.db.utils import IntegrityError
 
 User = get_user_model()
+
+
+@pytest.fixture
+def test_user(db):
+    """Create a test user for authentication tests."""
+    return User.objects.create_user(
+        email="test@example.com",
+        password="testpass123",
+        first_name="Test",
+        last_name="User",
+    )
 
 
 # UserManager tests
@@ -161,3 +173,112 @@ def test_inactive_user_cannot_authenticate(db):
     """Test that inactive users cannot authenticate."""
     User.objects.create_user(email="inactive@example.com", password="testpass123", is_active=False)
     assert authenticate(email="inactive@example.com", password="testpass123") is None
+
+
+def test_login_view_get(client):
+    """Test that login page loads correctly."""
+    response = client.get(reverse("login"))
+    assert response.status_code == 200
+    assert b"Login" in response.content
+    assert b"Email" in response.content
+    assert b"Password" in response.content
+
+
+def test_login_with_valid_credentials(client, test_user):
+    """Test login with valid email and password."""
+    response = client.post(
+        reverse("login"),
+        {"username": "test@example.com", "password": "testpass123"},
+        follow=True,
+    )
+    assert response.status_code == 200
+    # Should redirect to home page
+    assert response.redirect_chain == [(reverse("home"), 302)]
+    # User should be authenticated
+    assert response.wsgi_request.user.is_authenticated
+    assert response.wsgi_request.user.email == "test@example.com"
+
+
+@pytest.mark.parametrize("payload", [
+    {"username": "test@example.com", "password": "wrongpass"},
+    {"username": "nonexistent@example.com", "password": "anypass"},
+    {"username": "", "password": ""},
+])
+def test_login_failures(client, test_user, payload):
+    """Test various login failure scenarios."""
+    response = client.post(reverse("login"), payload)
+    assert response.status_code == 200
+    # Should stay on login page with error
+    assert b"Login" in response.content
+    # User should not be authenticated
+    assert not response.wsgi_request.user.is_authenticated
+
+
+def test_logout(client, test_user):
+    """Test logout functionality."""
+    # First login
+    client.login(username="test@example.com", password="testpass123")
+    # Verify logged in
+    response = client.get(reverse("home"))
+    assert response.wsgi_request.user.is_authenticated
+
+    # Now logout
+    response = client.get(reverse("logout"), follow=True)
+    assert response.status_code == 200
+    # Should redirect to login page
+    assert response.redirect_chain == [(reverse("login"), 302)]
+    # User should not be authenticated
+    assert not response.wsgi_request.user.is_authenticated
+
+
+def test_authenticated_user_redirect_from_login(client, test_user):
+    """Test that authenticated users are redirected from login page."""
+    # Login first
+    client.login(username="test@example.com", password="testpass123")
+
+    # Try to access login page
+    response = client.get(reverse("login"), follow=True)
+    assert response.status_code == 200
+    # Should redirect to home page
+    assert response.redirect_chain == [(reverse("home"), 302)]
+
+
+@pytest.mark.parametrize("url_name", ["widget-list", "widget-create"])
+def test_protected_views_require_login(client, url_name):
+    """Test that protected views require authentication."""
+    response = client.get(reverse(url_name))
+    assert response.status_code == 302
+    # Should redirect to login page
+    assert response.url.startswith(reverse("login"))
+
+
+@pytest.mark.parametrize("url_name", ["widget-list", "widget-create"])
+def test_protected_views_accessible_when_authenticated(client, test_user, url_name):
+    """Test that authenticated users can access protected views."""
+    client.login(username="test@example.com", password="testpass123")
+    response = client.get(reverse(url_name))
+    assert response.status_code == 200
+
+
+def test_home_page_accessible_without_login(client):
+    """Test that home page is accessible without authentication."""
+    response = client.get(reverse("home"))
+    assert response.status_code == 200
+
+
+def test_navigation_shows_login_when_anonymous(client):
+    """Test that navigation shows login link for anonymous users."""
+    response = client.get(reverse("home"))
+    assert response.status_code == 200
+    assert b"Login" in response.content
+    assert b"Logout" not in response.content
+
+
+def test_navigation_shows_user_when_authenticated(client, test_user):
+    """Test that navigation shows user email and logout when authenticated."""
+    client.login(username="test@example.com", password="testpass123")
+    response = client.get(reverse("home"))
+    assert response.status_code == 200
+    assert b"test@example.com" in response.content
+    assert b"Logout" in response.content
+    assert b"Login" not in response.content

@@ -5,12 +5,6 @@ from app.models import User
 
 
 @pytest.fixture
-def client():
-    """Provide a Django test client."""
-    return Client()
-
-
-@pytest.fixture
 def authenticated_client(db):
     """Provide a Django test client with an authenticated user."""
     user = User.objects.create_user(
