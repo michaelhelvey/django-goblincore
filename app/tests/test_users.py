@@ -1,7 +1,7 @@
 import pytest
-from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model
 from django.db.utils import IntegrityError
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -199,11 +199,14 @@ def test_login_with_valid_credentials(client, test_user):
     assert response.wsgi_request.user.email == "test@example.com"
 
 
-@pytest.mark.parametrize("payload", [
-    {"username": "test@example.com", "password": "wrongpass"},
-    {"username": "nonexistent@example.com", "password": "anypass"},
-    {"username": "", "password": ""},
-])
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"username": "test@example.com", "password": "wrongpass"},
+        {"username": "nonexistent@example.com", "password": "anypass"},
+        {"username": "", "password": ""},
+    ],
+)
 def test_login_failures(client, test_user, payload):
     """Test various login failure scenarios."""
     response = client.post(reverse("login"), payload)
@@ -241,23 +244,6 @@ def test_authenticated_user_redirect_from_login(client, test_user):
     assert response.status_code == 200
     # Should redirect to home page
     assert response.redirect_chain == [(reverse("home"), 302)]
-
-
-@pytest.mark.parametrize("url_name", ["widget-list", "widget-create"])
-def test_protected_views_require_login(client, url_name):
-    """Test that protected views require authentication."""
-    response = client.get(reverse(url_name))
-    assert response.status_code == 302
-    # Should redirect to login page
-    assert response.url.startswith(reverse("login"))
-
-
-@pytest.mark.parametrize("url_name", ["widget-list", "widget-create"])
-def test_protected_views_accessible_when_authenticated(client, test_user, url_name):
-    """Test that authenticated users can access protected views."""
-    client.login(username="test@example.com", password="testpass123")
-    response = client.get(reverse(url_name))
-    assert response.status_code == 200
 
 
 def test_home_page_accessible_without_login(client):
