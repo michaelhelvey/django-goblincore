@@ -1,14 +1,8 @@
 @import "tailwindcss" source(none);
 @plugin "daisyui" {
   themes:
-    light --default,
-    dark --prefersdark,
     cupcake,
-    bumblebee,
-    emerald,
-    corporate,
-    synthwave;
-  logs: false;
+    dark --prefersdark --default;
 }
 
 @source "../../";

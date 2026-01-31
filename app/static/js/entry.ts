@@ -1,13 +1,15 @@
 import "../css/globals.css";
 
-console.log("I am a typescript file executing after being pre-processed by vite!");
+const themeToNameMap: Record<Theme, string> = {
+  cupcake: "Light",
+  dark: "Dark",
+};
 
-// Theme Management
-type Theme = "light" | "dark" | "cupcake" | "bumblebee" | "emerald" | "corporate" | "synthwave";
+type Theme = "cupcake" | "dark";
 
 function loadTheme(): Theme {
   const savedTheme = localStorage.getItem("theme") as Theme | null;
-  return savedTheme || "light";
+  return savedTheme ?? "cupcake";
 }
 
 function setTheme(themeName: Theme): void {
@@ -19,7 +21,7 @@ function setTheme(themeName: Theme): void {
 function updateThemeDisplay(currentTheme: Theme): void {
   const themeNameEl = document.getElementById("current-theme-name");
   if (themeNameEl) {
-    themeNameEl.textContent = currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1);
+    themeNameEl.textContent = themeToNameMap[currentTheme];
   }
 
   // Update checkmarks on theme options

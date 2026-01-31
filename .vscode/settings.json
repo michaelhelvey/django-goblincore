@@ -3,9 +3,13 @@
   "editor.tabSize": 4,
   "editor.codeActionsOnSave": {
     "source.fixAll.ruff": "always",
-    "source.organizeImports.ruff": "always"
+    "source.organizeImports.ruff": "always",
+    "source.fixAll.eslint": "always"
   },
   "files.associations": {
     "*.html": "django-html"
+  },
+  "[typescript]": {
+    "editor.tabSize": 2
   }
 }

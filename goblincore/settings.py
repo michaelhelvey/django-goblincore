@@ -25,7 +25,9 @@ SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
     "django-insecure-j%=l#-7_w6sws)q1n+mn!mhltphzzs*sn_zg5ffio7@b%))cn%",
 )
-DEBUG = bool(os.getenv("DJANGO_DEBUG", "False"))
+DEBUG = bool(int(os.getenv("DJANGO_DEBUG", "0")))
+
+# FIXME: this is wonky when DEBUG = False, need to figure out what a sane default for this value is
 ALLOWED_HOSTS = []
 
 

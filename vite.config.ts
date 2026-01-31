@@ -12,7 +12,10 @@ export default defineConfig({
   root: APP_STATIC_DIR,
   build: {
     rollupOptions: {
-      input: [path.resolve(APP_STATIC_DIR, "js/entry.ts")],
+      input: [
+        path.resolve(APP_STATIC_DIR, "js/entry.ts"),
+        path.resolve(APP_STATIC_DIR, "js/icons.ts"),
+      ],
     },
     manifest: "manifest.json",
     outDir: path.resolve(APP_STATIC_DIR, "build"),

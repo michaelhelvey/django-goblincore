@@ -47,5 +47,8 @@
     ],
     "importOrderSeparation": false,
     "importOrderSortSpecifiers": true
+  },
+  "dependencies": {
+    "lucide": "0.562.0"
   }
 }
