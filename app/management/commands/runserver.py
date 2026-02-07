@@ -3,7 +3,6 @@ import os
 import signal
 import subprocess
 import sys
-
 from daphne.management.commands.runserver import Command as DaphneRunserverCommand
 from django.conf import settings
 

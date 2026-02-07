@@ -5,5 +5,6 @@ export default defineConfig({
     mockReset: true,
     unstubEnvs: true,
     globals: true,
+    passWithNoTests: true,
   },
 });

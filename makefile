@@ -3,9 +3,11 @@ default:
 
 test:
 	pytest --cov --cov-report=term-missing
+	pnpm test --run
 
 format:
 	uv run ruff format .
+	uv run ruff check --select I --fix .
 	pnpm run format
 
 lint:
@@ -14,6 +16,7 @@ lint:
 
 lint-fix:
 	uv run ruff check --fix .
+	uv run ruff check --select I --fix .
 	pnpm run lint --fix
 
 setup:

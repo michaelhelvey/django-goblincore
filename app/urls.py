@@ -1,7 +1,6 @@
-from django.urls import path
-
 from app.views.auth import LoginView, logout_view
 from app.views.home import HomeView
+from django.urls import path
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
