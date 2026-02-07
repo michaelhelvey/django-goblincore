@@ -17,6 +17,7 @@ jobs:
           npm i -g corepack
           corepack enable
           pnpm install
+      - run: source .venv/bin/activate
       - name: Lint
         run: make lint
       - name: Test
