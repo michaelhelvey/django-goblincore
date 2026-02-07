@@ -7,17 +7,21 @@ requires-python = ">=3.14"
 dependencies = [
     "beautifulsoup4>=4.14.3",
     "channels[daphne]>=4.3.2",
-    "django>=6.0.1",
+    "django>=6.0.2",
     "django-filter>=25.2",
     "django-vite>=3.1.0",
     "djangorestframework>=3.16.1",
     "drf-restwind>=1.2.0",
+    "factory-boy>=3.3.3",
+    "pytest-factoryboy>=2.8.1",
+    "pytest-pyspec>=1.1.1",
     "python-dotenv>=1.2.1",
     "servestatic>=3.1.0",
 ]
 
 [dependency-groups]
 dev = [
+    "djhtml>=3.0.10",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.0.0",
@@ -31,12 +35,7 @@ DJANGO_SETTINGS_MODULE = "goblincore.settings"
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = [
-    "--reuse-db",
-    "--strict-markers",
-    "--tb=short",
-    "-v",
-]
+addopts = ["--reuse-db", "--strict-markers", "--tb=short", "--pyspec"]
 markers = [
     "slow: marks tests as slow",
     "integration: marks tests as integration tests",
@@ -54,7 +53,7 @@ omit = [
     "goblincore/settings.py",
     "goblincore/asgi.py",
     "goblincore/wsgi.py",
-    "app/management/commands/runserver.py"
+    "app/management/commands/runserver.py",
 ]
 
 [tool.coverage.report]
@@ -91,3 +90,6 @@ ignore = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.ruff.lint.isort]
+no-sections = true

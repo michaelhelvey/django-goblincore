@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
-from .models import User, Widget
+from .models import User
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -84,11 +84,3 @@ class CustomUserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
-
-
-@admin.register(Widget)
-class WidgetAdmin(admin.ModelAdmin):
-    list_display = ["name", "price", "is_active", "created_at", "updated_at"]
-    list_filter = ["is_active", "created_at"]
-    search_fields = ["name", "description"]
-    readonly_fields = ["created_at", "updated_at"]

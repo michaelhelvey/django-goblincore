@@ -40,6 +40,3 @@ Start the application by running `./manage.py runserver` and visiting `http://lo
 
 Create yourself a user by running `./manage.py createsuperuser`. It's a standard Django application,
 so you'll mostly just be interacting with the standard `./manage.py` stuff.
-
-You can also view the Django Rest Framework frontend for a given resource, for example, at
-`http://localhost:8000/api/widgets`.

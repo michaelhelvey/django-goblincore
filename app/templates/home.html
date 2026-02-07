@@ -3,13 +3,12 @@
 {% block title %}Home - {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="hero min-h-[70vh]">
-    <div class="hero-content text-center">
-        <div class="max-w-2xl">
-            <h1 class="text-5xl font-bold mb-4">{{ message }}</h1>
-            <p class="text-xl mb-8">Welcome to Goblincore, your opinionated Django starter template with modern tooling and styling.</p>
-            <a href="{% url 'widget-list' %}" class="btn btn-primary btn-lg">View Widgets</a>
+    <div class="hero min-h-[70vh]">
+        <div class="hero-content text-center">
+            <div class="max-w-2xl">
+                <h1 class="text-5xl font-bold mb-4">{{ message }}</h1>
+                <p class="text-xl mb-8">Welcome to Django-Goblincore, your opinionated Django starter template for fullstack web development with modern tooling and sane defaults.</p>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

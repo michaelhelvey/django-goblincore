@@ -1,3 +1,4 @@
+import factory
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -24,6 +25,9 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+    def normalize_email(self, email):
+        return super().normalize_email(email).lower()
 
     def create_superuser(self, email, password=None, **extra_fields):
         """
@@ -88,3 +92,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         Return the short name for the user.
         """
         return self.first_name or self.email
+
+
+class UserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+        skip_postgeneration_save = True
+
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+    email = factory.LazyAttribute(
+        lambda obj: f"{obj.first_name.lower()}.{obj.last_name.lower()}@example.com"
+    )
+
+    @factory.post_generation
+    def password(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        password = extracted or "defaultpassword"
+        self.set_password(password)
+        self.save()
