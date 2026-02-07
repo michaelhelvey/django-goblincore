@@ -1,15 +1,15 @@
 import "../css/globals.css";
 
 const themeToNameMap: Record<Theme, string> = {
-  cupcake: "Light",
+  light: "Light",
   dark: "Dark",
 };
 
-type Theme = "cupcake" | "dark";
+type Theme = "light" | "dark";
 
 function loadTheme(): Theme {
   const savedTheme = localStorage.getItem("theme") as Theme | null;
-  return savedTheme ?? "cupcake";
+  return savedTheme ?? "light";
 }
 
 function setTheme(themeName: Theme): void {

@@ -24,14 +24,14 @@
                             <span id="current-theme-name">Theme</span>
                         </button>
                         <ul class="dropdown menu bg-base-100 rounded-box w-52 p-2 shadow-sm" popover="auto" id="theme-picker" style="position-anchor:--theme-picker-anchor;">
-                            <li><button onclick="setTheme('cupcake')">Light</button></li>
+                            <li><button onclick="setTheme('light')">Light</button></li>
                             <li><button onclick="setTheme('dark')">Dark</button></li>
                         </ul>
                         {% if user.is_authenticated %}
                             <span class="text-sm hidden sm:inline">{{ user.email }}</span>
-                            <a href="{% url 'logout' %}" class="btn btn-ghost btn-sm">Logout</a>
+                            <a href="{% url 'logout' %}" class="btn btn-ghost">Logout</a>
                         {% else %}
-                            <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Login</a>
+                            <a href="{% url 'login' %}" class="btn btn-ghost">Login</a>
                         {% endif %}
                     </div>
                 </nav>
