@@ -14,16 +14,22 @@ class Command(DaphneRunserverCommand):
 
     def handle(self, *args, **options):
         # Check if dev_mode is enabled
-        vite_config = settings.DJANGO_VITE.get("default", {})
-        dev_mode = vite_config.get("dev_mode", False)
-        dev_command = getattr(settings, "DJANGO_VITE_DEV_COMMAND", None)
+        vite_config = getattr(settings, "DJANGO_VITE", {})
+        dev_command = vite_config.get("dev_command", None)
+        if not dev_command:
+            self.stderr.write(
+                self.style.ERROR(
+                    "DJANGO_VITE setting must include 'dev_command' specifying the command to start the Vite dev server (e.g. 'pnpm exec vite')"
+                )
+            )
+            sys.exit(1)
 
         # Only start Vite in the main autoreloader process (not the worker)
         # or when autoreload is disabled
         use_reloader = options.get("use_reloader", True)
         is_main_process = os.environ.get("RUN_MAIN") != "true"
 
-        if dev_mode and dev_command and (not use_reloader or is_main_process):
+        if settings.DEBUG and dev_command and (not use_reloader or is_main_process):
             self.start_vite(dev_command)
 
         # Call parent's handle to start Django

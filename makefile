@@ -5,7 +5,7 @@ build:
 	pnpm exec vite build
 
 test:
-	pytest --cov --cov-report=term-missing -v
+	pytest -v --cov --cov-report=term-missing
 	pnpm test --run
 
 format:

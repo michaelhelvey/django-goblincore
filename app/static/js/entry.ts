@@ -1,3 +1,5 @@
+// see: https://vite.dev/guide/backend-integration
+import "vite/modulepreload-polyfill";
 import "../css/globals.css";
 
 const themeToNameMap: Record<Theme, string> = {

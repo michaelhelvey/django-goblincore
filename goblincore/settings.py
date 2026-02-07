@@ -33,9 +33,9 @@ ALLOWED_HOSTS = []
 # Application definition
 INSTALLED_APPS = [
     "app",
+    "django_vite",
     "daphne",
     "django_filters",
-    "django_vite",
     "rest_wind",
     "rest_framework",
     "django.contrib.admin",
@@ -132,14 +132,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "app/static/build"]
 
 DJANGO_VITE = {
-    "default": {
-        "dev_mode": DEBUG,
-        "manifest_path": BASE_DIR / "app/static/build/manifest.json",
-    }
+    "manifest_path": BASE_DIR / "app/static/build/manifest.json",
+    "dev_command": "pnpm exec vite",
+    "dev_server": "http://localhost:5173/static",
 }
-
-# Vite dev server command (only used when dev_mode is True)
-DJANGO_VITE_DEV_COMMAND = "pnpm exec vite"
 
 # Custom User Model
 AUTH_USER_MODEL = "app.User"
