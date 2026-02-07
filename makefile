@@ -1,6 +1,9 @@
 default:
 	./manage.py runserver
 
+build:
+	pnpm exec vite build
+
 test:
 	pytest --cov --cov-report=term-missing -v
 	pnpm test --run
