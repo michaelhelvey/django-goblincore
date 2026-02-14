@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Goblincore{% endblock %}
+
+{% block content %}
+    <div class="h-full flex-1 flex items-center justify-center p-4">
+        <div class="card bg-base-200 w-full max-w-md shadow-sm">
+            <div class="card-body space-y-4">
+                <h2 class="card-title text-2xl font-bold">Login</h2>
+
+                {% if form.non_field_errors %}
+                    <div role="alert" class="alert alert-error">
+                        <i class="w-6 h-6" data-lucide="circle-alert"></i>
+                        <span>{{ form.non_field_errors }}</span>
+                    </div>
+                {% endif %}
+
+                <form method="post" class="flex flex-col gap-4">
+                    {% csrf_token %}
+
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text font-semibold">Email</span>
+                        </div>
+                        <input type="email" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" class="input input-bordered w-full" placeholder="your.email@example.com" value="{{ form.username.value|default:'' }}" required>
+                        {% if form.username.errors %}
+                            <div class="label">
+                                <span class="label-text-alt text-error">{{ form.username.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text font-semibold">Password</span>
+                        </div>
+                        <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="input input-bordered w-full" placeholder="Enter your password" required>
+                        {% if form.password.errors %}
+                            <div class="label">
+                                <span class="label-text-alt text-error">{{ form.password.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </label>
+
+                    <button type="submit" class="btn btn-primary btn-block mt-6">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

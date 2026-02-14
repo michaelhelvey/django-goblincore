@@ -1,0 +1,13 @@
+@import "tailwindcss" source(none);
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+@source "../../";
+
+html,
+body {
+  height: 100%;
+}

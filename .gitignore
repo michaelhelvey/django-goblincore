@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache
+.ruff_cache
+
+# Virtual environments
+.venv
+
+# Django
+staticfiles
+static/build
+db.sqlite3
+
+# Other
+.env
+.coverage
+
+# javascript
+node_modules
+build
+dist
+coverage
