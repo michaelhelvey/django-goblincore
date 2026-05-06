@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Widget
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
@@ -80,6 +80,12 @@ class CustomUserAdmin(BaseUserAdmin):
     )
 
     readonly_fields = ("last_login", "date_joined")
+
+
+@admin.register(Widget)
+class WidgetAdmin(admin.ModelAdmin):
+    list_display = ("name", "created_at", "updated_at")
+    search_fields = ("name", "description")
 
 
 admin.site.register(User, CustomUserAdmin)

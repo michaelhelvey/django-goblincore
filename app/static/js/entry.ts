@@ -25,16 +25,6 @@ function updateThemeDisplay(currentTheme: Theme): void {
   if (themeNameEl) {
     themeNameEl.textContent = themeToNameMap[currentTheme];
   }
-
-  // Update checkmarks on theme options
-  document.querySelectorAll(".theme-option").forEach((option) => {
-    const themeName = option.getAttribute("data-theme");
-    if (themeName === currentTheme) {
-      option.classList.add("active");
-    } else {
-      option.classList.remove("active");
-    }
-  });
 }
 
 // Update theme display on page load (theme already set by inline script)

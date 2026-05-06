@@ -26,14 +26,16 @@
                         <a href="{% url 'home' %}" class="btn btn-ghost text-xl">Goblincore</a>
                     </div>
                     <div class="navbar-end gap-2">
-                        <button class="btn btn-ghost" popovertarget="theme-picker" style="anchor-name:--theme-picker-anchor">
-                            <i class="w-5 h-5" data-lucide="sun-moon"></i>
-                            <span id="current-theme-name">Theme</span>
-                        </button>
-                        <ul class="dropdown menu bg-base-100 rounded-box w-52 p-2 shadow-sm" popover="auto" id="theme-picker" style="position-anchor:--theme-picker-anchor;">
-                            <li><button onclick="setTheme('light')">Light</button></li>
-                            <li><button onclick="setTheme('dark')">Dark</button></li>
-                        </ul>
+                        <div class="dropdown dropdown-end">
+                            <button tabindex="0" role="button" class="btn btn-ghost">
+                                <i class="w-5 h-5" data-lucide="sun-moon"></i>
+                                <span id="current-theme-name">Theme</span>
+                            </button>
+                            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><button onclick="setTheme('light')">Light</button></li>
+                                <li><button onclick="setTheme('dark')">Dark</button></li>
+                            </ul>
+                        </div>
                         {% if user.is_authenticated %}
                             <span class="text-sm hidden sm:inline">{{ user.email }}</span>
                             <a href="{% url 'logout' %}" class="btn btn-ghost">Logout</a>
