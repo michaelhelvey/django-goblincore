@@ -25,3 +25,8 @@ node_modules
 build
 dist
 coverage
+.vite-hooks
+
+# ai
+.pi
+specs

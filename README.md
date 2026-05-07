@@ -1,6 +1,12 @@
-# Goblincore
+<p align="center">
+  <img src="./assets/the-goblin-market-hilda-koe.jpg" alt="Goblin painting" width="200" />
+</p>
 
-An opinionated starting point for modern Django development.
+<h1 align="center">Django-Goblincore</h1>
+
+<p align="center">
+  <i>A opinionated starting point for modern Django development</i>
+</p>
 
 ## Features
 
@@ -16,7 +22,7 @@ An opinionated starting point for modern Django development.
   want to add a React app to your Django application, it's as simple as adding the React Vite
   plugin.
 - Styling with Tailwindcss and DaisyUI
-- Opinionated linting & formatting for both Python and Javascript with Ruff, Eslint, and Prettier
+- Opinionated linting & formatting for both Python and Javascript with Ruff & VitePlus.
 
 ## Getting Started
 
@@ -24,18 +30,9 @@ Before getting started, make sure you have the following installed:
 
 - Python 3.14+
 - Node.js (latest LTS recommended)
-- pnpm 10+ (or it will be installed automatically via packageManager field if you have corepack
+- pnpm 11+ (or it will be installed automatically via packageManager field if you have corepack
   enabled)
 - uv package manager ([install instructions](https://docs.astral.sh/uv/))
 
-If you use [mise](https://github.com/jdx/mise), you can install all of this by just running
-`mise install` and `uv python install 3.14.2` (or your version of choice).
-
-Then just run `make setup` to install dependencies and initalize your environment.
-
-## Common Commands
-
-Start the application by running `./manage.py runserver` and visiting `http://localhost:8000`.
-
-Create yourself a user by running `./manage.py createsuperuser`. It's a standard Django application,
-so you'll mostly just be interacting with the standard `./manage.py` stuff.
+Then just run `pnpm local-setup` to install dependencies and initalize your environment, then run
+`./manage.py runserver` to start your app at `http://localhost:8000`

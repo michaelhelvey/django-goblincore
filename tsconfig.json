@@ -16,7 +16,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
 
-    // vitest:
-    "types": ["vitest/globals"]
+    "types": ["node", "vite/client", "@testing-library/jest-dom"]
   }
 }

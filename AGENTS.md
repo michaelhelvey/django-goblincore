@@ -8,22 +8,21 @@ An opinionated starting point for modern Django development.
 - Framework: Django 6.0+
 - Package Manager (python): `uv`
 - Package Manager (javascript): `pnpm`
-- JS ecosystem: `vite` (bundler / transpiler), `vitest` (js testing)
+- JS ecosystem: `vite` (bundler / transpiler), `vitest` (js testing). Both use the `vite-plus`
+  unified toolchain.
 - CSS styling: tailwindcss with daisyui (docs: https://daisyui.com/llms.txt)
 
 ## Commands
 
+_Note: all python commands assume you have the virtual env activated_
+
 - Start application: `./manage.py runserver` or `make`
-- Test: `pytest` or `make test`
+- Test: `pytest` or `pnpm test`
 - Test (specific file): `pytest app/tests/test_user.py`
 - Test (specific test function): `pytest app/tests/test_user.py::test_create_user_with_valid_data`
 - Add a package: `uv add <package>`
-- Format code: `make format` (runs ruff formatter)
-- Lint code: `make lint` (runs ruff linter)
-- Lint and fix: `make lint-fix` (runs ruff linter with auto-fix)
-
-You can potentially discover other commands by examining the `Makefile` or by running
-`./manage.py --help`.
+- Format code: `pnpm format` (runs ruff and vp formatter)
+- Lint code: `pnpm lint` (runs ruff and vp linter)
 
 ## Guidelines
 

@@ -10,16 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v3
-      - name: Install
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.11.11"
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: "pnpm"
+      - name: Install Dependencies
         run: |
           uv sync
-          npm i -g corepack
           corepack enable
           pnpm install
           make build
       - run: echo PATH=${GITHUB_WORKSPACE}/.venv/bin:$PATH >> $GITHUB_ENV
       - name: Lint
-        run: make lint
+        run: pnpm lint
       - name: Test
-        run: make test
+        run: pnpm test
