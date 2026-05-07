@@ -36,14 +36,15 @@ INSTALLED_APPS = [
     "django_vite",
     "daphne",
     "django_filters",
-    "rest_wind",
+    "drf_spectacular",
     "rest_framework",
+    "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    "goblincore.staticfiles.StaticFilesConfig",
 ]
 
 MIDDLEWARE = [
@@ -156,4 +157,11 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Goblincore API",
+    "DESCRIPTION": "OpenAPI schema for the Goblincore API.",
+    "VERSION": "0.1.0",
 }

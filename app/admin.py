@@ -1,7 +1,12 @@
 from .models import User, Widget
 from django.contrib import admin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import Group
+from unfold.admin import ModelAdmin
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+
+admin.site.unregister(Group)
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -24,13 +29,14 @@ class CustomUserChangeForm(UserChangeForm):
         fields = "__all__"
 
 
-class CustomUserAdmin(BaseUserAdmin):
+class CustomUserAdmin(BaseUserAdmin, ModelAdmin):
     """
     Custom admin for User model with email-based authentication.
     """
 
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
+    change_password_form = AdminPasswordChangeForm
 
     list_display = (
         "email",
@@ -82,8 +88,13 @@ class CustomUserAdmin(BaseUserAdmin):
     readonly_fields = ("last_login", "date_joined")
 
 
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin, ModelAdmin):
+    pass
+
+
 @admin.register(Widget)
-class WidgetAdmin(admin.ModelAdmin):
+class WidgetAdmin(ModelAdmin):
     list_display = ("name", "created_at", "updated_at")
     search_fields = ("name", "description")
 
