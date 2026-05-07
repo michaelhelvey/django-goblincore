@@ -16,7 +16,7 @@
   etc.
 - Common packages already installed: django-filter for auto-generating filters for your list views,
   django rest framework for your APIs, django-channels for websockets and other realtime uses,
-  `daphne` for ASGI, etc.
+  `daphne` for ASGI, django-htmx for forms and other dynamic content, etc.
 - Deep integration with the modern JS ecosystem: `./manage.py runserver` starts Vite for you, and
   you get all the nice features of Vite that you might be used to from javascript frameworks. If you
   want to add a React app to your Django application, it's as simple as adding the React Vite

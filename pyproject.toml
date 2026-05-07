@@ -32,7 +32,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "goblincore.settings"
+DJANGO_SETTINGS_MODULE = "base_site.settings"
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -42,15 +42,15 @@ testpaths = ["app"]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["app", "goblincore"]
+source = ["app", "base_site"]
 omit = [
   "*/migrations/*",
   "*/tests/*",
   "*/__pycache__/*",
   "*/venv/*",
-  "goblincore/settings.py",
-  "goblincore/asgi.py",
-  "goblincore/wsgi.py",
+  "base_site/settings.py",
+  "base_site/asgi.py",
+  "base_site/wsgi.py",
   "app/management/commands/runserver.py",
 ]
 

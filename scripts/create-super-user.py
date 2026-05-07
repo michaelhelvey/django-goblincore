@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.append(os.getcwd())
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "goblincore.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "base_site.settings")
 django.setup(set_prefix=False)
 
 from app.models.user import User  # noqa: E402
