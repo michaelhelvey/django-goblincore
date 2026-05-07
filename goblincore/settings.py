@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "rest_framework",
+    "servestatic",
     "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
