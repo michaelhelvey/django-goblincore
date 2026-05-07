@@ -1,5 +1,6 @@
 {% load static %}
 {% load django_vite %}
+{% load django_htmx %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,8 +18,9 @@
         {% vite_hmr_client %}
         {% vite_asset 'js/entry.ts' %}
         {% vite_asset 'js/icons.ts' %}
+        {% htmx_script %}
     </head>
-    <body class="bg-base-100 text-base-content flex flex-col">
+    <body class="bg-base-100 text-base-content flex flex-col" hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
         <div class="container mx-auto flex flex-col h-full">
             <header>
                 <nav class="navbar">

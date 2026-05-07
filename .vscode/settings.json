@@ -1,6 +1,12 @@
 {
   "editor.formatOnSave": true,
   "editor.tabSize": 4,
+  "[javascript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[javascriptreact]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "oxc.oxc-vscode", "editor.tabSize": 2 },
+  "[json]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "editor.codeActionsOnSave": {
     "source.fixAll.ruff": "always",
     "source.organizeImports.ruff": "always",
@@ -9,7 +15,5 @@
   "files.associations": {
     "*.html": "django-html"
   },
-  "[typescript]": {
-    "editor.tabSize": 2
-  }
+  "python.testing.pytestEnabled": true
 }
