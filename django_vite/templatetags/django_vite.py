@@ -63,8 +63,15 @@ def vite_react_refresh_runtime():
 
 
 @register.simple_tag
-def vite_asset(entry_point: str):
+def vite_asset(entry_point):
     if not prod_mode:
+        if is_css_asset(entry_point):
+            return format_html(
+                '<link rel="stylesheet" href="{dev_server}/{entry_point}">',
+                dev_server=dev_server,
+                entry_point=entry_point,
+            )
+
         return format_html(
             '<script type="module" crossorigin src="{dev_server}/{entry_point}"></script>',
             dev_server=dev_server,
@@ -74,7 +81,7 @@ def vite_asset(entry_point: str):
     return resolve_from_manifest(entry_point)
 
 
-def resolve_from_manifest(entry_point: str) -> list[str]:
+def resolve_from_manifest(entry_point):
     """
     Given some entry key from the Vite manifest, returns the html tags that
     should be inserted into the document for that key.
@@ -99,32 +106,46 @@ def resolve_from_manifest(entry_point: str) -> list[str]:
         raise ValueError(f"Entry point '{entry_point}' not found in Vite manifest")
 
     entry = manifest_data[entry_point]
+    html = []
+
     # Assumption: Vite outputs asset paths that are served under Django's STATIC_URL
     # (for example, the Vite build output directory is included in STATICFILES_DIRS).
     # If your Vite build output is not served under STATIC_URL, adjust your Vite build
     # configuration so the manifest file paths resolve correctly relative to STATIC_URL
     # or extend this tag to support a configurable base URL for Vite assets.
-    entry_path = urljoin(settings.STATIC_URL, entry["file"])
-    html = [f"<script type='module' src=\"{entry_path}\"></script>"]
-
-    if "css" in entry:
-        for css_file in entry["css"]:
-            css_path = urljoin(settings.STATIC_URL, css_file)
-            html.append(f'<link rel="stylesheet" href="{css_path}">')
+    for css_file in entry.get("css", []):
+        html.append(stylesheet_tag(css_file))
 
     def _include_imports(imports):
         for import_entry in imports:
             imported = manifest_data.get(import_entry)
             if not imported:
                 continue
-            if "css" in imported:
-                for css_file in imported["css"]:
-                    css_path = urljoin(settings.STATIC_URL, css_file)
-                    html.append(f'<link rel="stylesheet" href="{css_path}">')
+            for css_file in imported.get("css", []):
+                html.append(stylesheet_tag(css_file))
             if "imports" in imported:
                 _include_imports(imported["imports"])
 
     if "imports" in entry:
         _include_imports(entry["imports"])
 
+    html.append(asset_tag(entry["file"]))
+
     return mark_safe("\n".join(html))
+
+
+def asset_tag(file_name):
+    file_path = urljoin(settings.STATIC_URL, file_name)
+    if is_css_asset(file_name):
+        return f'<link rel="stylesheet" href="{file_path}">'
+
+    return f'<script type="module" src="{file_path}"></script>'
+
+
+def stylesheet_tag(file_name):
+    file_path = urljoin(settings.STATIC_URL, file_name)
+    return f'<link rel="stylesheet" href="{file_path}">'
+
+
+def is_css_asset(file_name):
+    return file_name.endswith(".css")

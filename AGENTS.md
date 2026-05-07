@@ -4,7 +4,7 @@ An opinionated starting point for modern Django development.
 
 ## Project Overview
 
-- Language: Python 3.14:
+- Language: Python 3.14
 - Framework: Django 6.0+
 - Package Manager (python): `uv`
 - Package Manager (javascript): `pnpm`
@@ -26,7 +26,8 @@ _Note: all python commands assume you have the virtual env activated_
 
 ## Guidelines
 
-- Write functional-style pytest tests. Do not write class based tests.
+- Write functional-style pytest tests. Do not write class based tests (using classes for the
+  pytest-pyspec DSL is fine, but that doesn't count as a "class based test" in the unittest sense).
 - Aim for 100% test coverage, but do not overtest a feature. Aim to achieve coverage with a few
   simple tests that validate core functionality.
 - Do not use Python type hints. Ignore type hinting errors from the LSP. This project does not use

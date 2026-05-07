@@ -19,6 +19,7 @@ export default defineConfig({
     rollupOptions: {
       input: [
         // add other entrypoints as required:
+        path.resolve(APP_STATIC_DIR, "css/globals.css"),
         path.resolve(APP_STATIC_DIR, "js/entry.ts"),
         path.resolve(APP_STATIC_DIR, "js/icons.ts"),
       ],

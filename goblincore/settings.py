@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -25,9 +26,11 @@ SECRET_KEY = os.getenv(
     "django-insecure-j%=l#-7_w6sws)q1n+mn!mhltphzzs*sn_zg5ffio7@b%))cn%",
 )
 DEBUG = bool(int(os.getenv("DJANGO_DEBUG", "0")))
+IS_TESTING = "pytest" in Path(sys.argv[0]).name or "test" in sys.argv
+USE_PRODUCTION_ASSETS = not DEBUG and not IS_TESTING
 
 # FIXME: this is wonky when DEBUG = False, need to figure out what a sane default for this value is
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -125,9 +128,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+staticfiles_backend = "django.contrib.staticfiles.storage.StaticFilesStorage"
+if USE_PRODUCTION_ASSETS:
+    staticfiles_backend = "servestatic.storage.CompressedManifestStaticFilesStorage"
+
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "servestatic.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": staticfiles_backend,
     },
 }
 
@@ -139,6 +146,7 @@ DJANGO_VITE = {
     "manifest_path": BASE_DIR / "app/static/build/manifest.json",
     "dev_command": "pnpm exec vite",
     "dev_server": "http://localhost:5173/static",
+    "prod_mode": USE_PRODUCTION_ASSETS,
 }
 
 # Custom User Model
